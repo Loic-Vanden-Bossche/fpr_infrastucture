@@ -6,6 +6,12 @@ on:
       - main
   pull_request:
 
+env:
+  TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  TF_VAR_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_docker_hub_secret: ${{ secrets.DOCKER_HUB_SECRET }}
+  TF_VAR_rds_pg_password: ${{ secrets.RDS_PG_PASSWORD }}
+
 jobs:
   terraform:
     name: "Terraform"
