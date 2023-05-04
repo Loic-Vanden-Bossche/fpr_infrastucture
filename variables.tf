@@ -10,6 +10,12 @@ variable "secret_access_key" {
   sensitive     = true
 }
 
+variable "domain_name" {
+  description   = "Domain name to use for the application"
+  type          = string
+  default       = "flash-player-revival.fr"
+}
+
 variable "region" {
   description   = "Region to use for AWS resources"
   type          = string

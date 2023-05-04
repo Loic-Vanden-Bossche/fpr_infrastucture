@@ -47,7 +47,7 @@ resource "aws_lb_listener" "listener_tls" {
   load_balancer_arn = aws_alb.fpr_backend_load_balancer.arn
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   = aws_acm_certificate.api-cert.arn
+  certificate_arn   = aws_acm_certificate.public-api-cert.arn
   ssl_policy        = "ELBSecurityPolicy-2016-08"
 
   default_action {

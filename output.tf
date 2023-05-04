@@ -1,5 +1,5 @@
 output "api_url" {
-  value = "https://${aws_acm_certificate.api-cert.domain_name}/actuator/health"
+  value = "https://${aws_acm_certificate.public-api-cert.domain_name}/actuator/health"
 }
 
 output "database_url" {
