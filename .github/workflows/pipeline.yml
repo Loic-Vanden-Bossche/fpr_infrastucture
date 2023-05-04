@@ -11,6 +11,7 @@ env:
   TF_VAR_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   TF_VAR_docker_hub_secret: ${{ secrets.DOCKER_HUB_SECRET }}
   TF_VAR_rds_pg_password: ${{ secrets.RDS_PG_PASSWORD }}
+  AWS_REGION: "eu-west-3"
 
 jobs:
   terraform:
@@ -28,6 +29,13 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
         id: init
