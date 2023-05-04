@@ -64,6 +64,11 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
 }
 
 resource "aws_ecs_service" "fpr_backend_service" {
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [task_definition]
+  }
+
   name            = "fpr-backend-service"
   cluster         = aws_ecs_cluster.fpr_backend_cluster.id
   task_definition = aws_ecs_task_definition.fpr_backend_task.arn

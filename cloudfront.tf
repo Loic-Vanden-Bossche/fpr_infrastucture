@@ -16,6 +16,13 @@ resource "aws_cloudfront_distribution" "cf_dist" {
     }
   }
 
+  custom_error_response {
+    error_code = 403
+    response_code = 200
+    response_page_path = "/index.html"
+    error_caching_min_ttl = 10
+  }
+
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
