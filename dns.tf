@@ -54,9 +54,9 @@ resource "aws_route53_record" "fronted_validation" {
 
 resource "aws_route53_record" "fronted" {
   provider = aws.virginia
-  name    = aws_acm_certificate.public-cert-fronted.domain_name
-  type    = "A"
-  zone_id = data.aws_route53_zone.public.zone_id
+  name     = aws_acm_certificate.public-cert-fronted.domain_name
+  type     = "A"
+  zone_id  = data.aws_route53_zone.public.zone_id
 
   alias {
     name                   = aws_cloudfront_distribution.cf_dist.domain_name
