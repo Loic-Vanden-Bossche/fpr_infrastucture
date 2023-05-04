@@ -1,5 +1,5 @@
-output "app_url" {
-  value = aws_alb.fpr_backend_load_balancer.dns_name
+output "api_url" {
+  value = "https://${aws_acm_certificate.api-cert.domain_name}/actuator/health"
 }
 
 output "database_url" {

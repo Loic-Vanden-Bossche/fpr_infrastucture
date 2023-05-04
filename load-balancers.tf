@@ -31,8 +31,29 @@ resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_alb.fpr_backend_load_balancer.arn
   port              = "80"
   protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "listener_tls" {
+  load_balancer_arn = aws_alb.fpr_backend_load_balancer.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate.api-cert.arn
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.target_group.arn
   }
+
+  depends_on = [aws_acm_certificate_validation.api]
 }
