@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "target_group" {
     timeout             = 10
     interval            = 30
   }
-  vpc_id = aws_default_vpc.default_vpc.id
+  vpc_id      = aws_default_vpc.default_vpc.id
 }
 
 resource "aws_lb_listener" "listener" {

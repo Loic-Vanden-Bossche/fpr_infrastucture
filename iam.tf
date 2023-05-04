@@ -27,12 +27,12 @@ resource "aws_iam_role_policy" "ecs_task_execution_role_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect" : "Allow",
-        "Action" : [
+        "Effect": "Allow",
+        "Action": [
           "ssm:GetParameters",
           "secretsmanager:GetSecretValue"
         ],
-        "Resource" : [
+        "Resource": [
           aws_secretsmanager_secret.fpr_backend_docker_access_key.arn
         ]
       },
@@ -48,14 +48,14 @@ resource "aws_iam_role_policy" "logs_role_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect" : "Allow",
-        "Action" : [
+        "Effect": "Allow",
+        "Action": [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents",
           "logs:DescribeLogStreams"
         ],
-        "Resource" : [
+        "Resource": [
           "arn:aws:logs:*:*:*"
         ]
       },
