@@ -4,6 +4,12 @@ resource "aws_ecs_cluster" "fpr_backend_cluster" {
 
 resource "aws_ecs_task_definition" "fpr_backend_task" {
   family = "fpr-backend-task"
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [container_definitions]
+  }
+
   container_definitions = jsonencode([
     {
       name : "fpr-backend-task",
@@ -18,16 +24,6 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
           "hostPort" : 8080
         }
       ],
-      healthCheck : {
-        "command" : [
-          "CMD-SHELL",
-          "curl -f http://localhost:8080/actuator/health || exit 1"
-        ],
-        interval : 10,
-        timeout : 5,
-        retries : 10,
-        startPeriod : 240
-      },
       environment : [
         {
           name : "spring.datasource.url",
