@@ -103,6 +103,7 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_role_policy" {
           "ecs:DescribeServices",
           "ecs:DescribeTaskDefinition",
           "ecs:RegisterTaskDefinition",
+          "ecs:DescribeTasks",
           "ecs:RunTask",
         ],
         Resource : "*"
