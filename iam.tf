@@ -100,7 +100,8 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_role_policy" {
         Action : [
           "ecs:ListClusters",
           "ecs:DescribeServices",
-          "ecs:DescribeTaskDefinition"
+          "ecs:DescribeTaskDefinition",
+          "ecs:RegisterTaskDefinition"
         ],
         Resource : "*"
       }
