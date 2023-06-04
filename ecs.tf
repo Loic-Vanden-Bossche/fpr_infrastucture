@@ -41,6 +41,10 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
         {
           name : "spring.datasource.password",
           value : var.rds_pg_password
+        },
+        {
+          name : "spring.profiles.active",
+          value : "prod"
         }
       ],
       logConfiguration : {
