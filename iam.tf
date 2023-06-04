@@ -73,9 +73,7 @@ resource "aws_iam_role_policy" "ecs_backend_policy" {
       {
         Effect : "Allow",
         Action : [
-          "ecs:DescribeClusters",
-          "ecs:DescribeTasks",
-          "ecs:RunTask"
+          "ecs:ListClusters"
         ],
         Resource : "*"
       }
