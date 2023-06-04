@@ -48,17 +48,37 @@ resource "aws_iam_role_policy" "logs_role_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect" : "Allow",
-        "Action" : [
+        Effect : "Allow",
+        Action : [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents",
           "logs:DescribeLogStreams"
         ],
-        "Resource" : [
+        Resource : [
           "arn:aws:logs:*:*:*"
         ]
       },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "ecs_backend_policy" {
+  name = "backend_role_policy"
+  role = aws_iam_role.ecsTaskExecutionRole.id
+
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Effect : "Allow",
+        Action : [
+          "ecs:DescribeClusters",
+          "ecs:DescribeTasks",
+          "ecs:RunTask"
+        ],
+        Resource : "*"
+      }
     ]
   })
 }
