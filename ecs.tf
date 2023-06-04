@@ -68,6 +68,36 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
   task_role_arn            = aws_iam_role.ecs_fpr_backend_task_execution_role.arn
 }
 
+resource "aws_ecs_task_definition" "fpr_game_task" {
+  family = "fpr-game-task"
+
+  container_definitions = jsonencode([
+    {
+      name : "fpr-game-default-task",
+      image : "default-image",
+      essential : true,
+      logConfiguration : {
+        logDriver : "awslogs",
+        options : {
+          awslogs-create-group : "true",
+          awslogs-group : "awslogs-game",
+          awslogs-region : var.region,
+          awslogs-stream-prefix : "awslogs-game"
+        }
+      },
+      memory : 512,
+      cpu : 256
+    }
+  ])
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  memory                   = 512
+  cpu                      = 256
+  execution_role_arn       = aws_iam_role.ecs_fpr_backend_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_fpr_backend_task_execution_role.arn
+}
+
+
 resource "aws_ecs_service" "fpr_backend_service" {
   name            = "fpr-backend-service"
   cluster         = aws_ecs_cluster.fpr_backend_cluster.id
@@ -85,5 +115,18 @@ resource "aws_ecs_service" "fpr_backend_service" {
     subnets          = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
     assign_public_ip = true
     security_groups  = [aws_security_group.service_security_group.id]
+  }
+}
+
+resource "aws_ecs_service" "fpr_games_service" {
+  name            = "fpr-games-service"
+  cluster         = aws_ecs_cluster.fpr_backend_cluster.id
+  task_definition = aws_ecs_task_definition.fpr_game_task.arn
+  launch_type     = "FARGATE"
+  desired_count   = 0
+
+  network_configuration {
+    subnets         = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
+    security_groups = [aws_security_group.service_security_group.id]
   }
 }
