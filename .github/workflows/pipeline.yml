@@ -10,6 +10,7 @@ env:
   TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
   TF_VAR_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   TF_VAR_docker_hub_secret: ${{ secrets.DOCKER_HUB_SECRET }}
+  TF_VAR_docker_hub_repository: ${{ vars.DOCKER_HUB_REPOSITORY }}
   TF_VAR_rds_pg_password: ${{ secrets.RDS_PG_PASSWORD }}
   AWS_REGION: "eu-west-3"
 
@@ -48,15 +49,15 @@ jobs:
       - name: Docker Hub Login
         id: login
         run: |
-          export TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "${{ env.DOCKER_HUB_USERNAME }}", "password": "${{ secrets.DOCKER_HUB_SECRET }}"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+          export TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "${{ vars.DOCKER_HUB_USERNAME }}", "password": "${{ secrets.DOCKER_HUB_SECRET }}"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
           echo "::set-output name=token::$TOKEN"
 
       - name: Get latest Docker Hub tag
         id: latest-tag
         env:
           TOKEN: ${{ steps.login.outputs.token }}
-          USERNAME: ${{ env.DOCKER_HUB_USERNAME }}
-          REPOSITORY: ${{ env.DOCKER_HUB_REPOSITORY }}
+          USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
+          REPOSITORY: ${{ vars.DOCKER_HUB_REPOSITORY }}
         run: |
           curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/lvandenbossche/fpr-backend/tags/"
           TAG=$(curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/lvandenbossche/fpr-backend/tags/" | jq -r '.results[] | select(.name != "latest") | .name')
