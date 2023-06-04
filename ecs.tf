@@ -24,6 +24,16 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
           "hostPort" : 8080
         }
       ],
+      healthCheck : {
+        "command" : [
+          "CMD-SHELL",
+          "curl -f http://localhost:8080/actuator/health || exit 1"
+        ],
+        interval : 10,
+        timeout : 5,
+        retries : 10,
+        startPeriod : 240
+      },
       environment : [
         {
           name : "spring.datasource.url",
@@ -47,7 +57,7 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
           awslogs-stream-prefix : "awslogs-backend"
         }
       },
-      memory : 512,
+      memory : 1024,
       cpu : 256
     }
   ])
@@ -57,6 +67,14 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
   cpu                      = 256
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
   task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
+}
+
+data "external" "dockerhub_latest_tag" {
+  program = ["sh", "-c", "docker pull ${var.docker_hub_repository}:${var.docker_hub_image} >/dev/null && docker image inspect --format '{{ index .RepoDigests 0 }}' ${var.docker_hub_repository}:${var.docker_hub_image} | cut -d@ -f2"]
+}
+
+output "latest_docker_tag" {
+  value = data.external.dockerhub_latest_tag.result
 }
 
 resource "aws_ecs_service" "fpr_backend_service" {

@@ -45,6 +45,28 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
+      - name: Docker Hub Login
+        id: login
+        run: |
+          export TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "${{ env.DOCKER_HUB_USERNAME }}", "password": "${{ secrets.DOCKER_HUB_SECRET }}"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+          echo "::set-output name=token::$TOKEN"
+
+      - name: Get latest Docker Hub tag
+        id: latest-tag
+        env:
+          TOKEN: ${{ steps.login.outputs.token }}
+          USERNAME: ${{ env.DOCKER_HUB_USERNAME }}
+          REPOSITORY: ${{ env.DOCKER_HUB_REPOSITORY }}
+        run: |
+          TAG=$(curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/$USERNAME/$REPOSITORY/tags/" | jq -r '.results[] | select(.name != "latest") | .name')
+          echo "::set-output name=tag::$TAG"
+
+      - name: Use Docker Hub Tag
+        env:
+          TAG: ${{ steps.latest-tag.outputs.tag }}
+        run: |
+          echo "Using Docker Hub tag: $TAG"
+
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
