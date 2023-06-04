@@ -97,7 +97,6 @@ resource "aws_ecs_task_definition" "fpr_game_task" {
   task_role_arn            = aws_iam_role.ecs_fpr_backend_task_execution_role.arn
 }
 
-
 resource "aws_ecs_service" "fpr_backend_service" {
   name            = "fpr-backend-service"
   cluster         = aws_ecs_cluster.fpr_backend_cluster.id
@@ -115,18 +114,5 @@ resource "aws_ecs_service" "fpr_backend_service" {
     subnets          = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
     assign_public_ip = true
     security_groups  = [aws_security_group.service_security_group.id]
-  }
-}
-
-resource "aws_ecs_service" "fpr_games_service" {
-  name            = "fpr-games-service"
-  cluster         = aws_ecs_cluster.fpr_backend_cluster.id
-  task_definition = aws_ecs_task_definition.fpr_game_task.arn
-  launch_type     = "FARGATE"
-  desired_count   = 0
-
-  network_configuration {
-    subnets         = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
-    security_groups = [aws_security_group.service_security_group.id]
   }
 }
