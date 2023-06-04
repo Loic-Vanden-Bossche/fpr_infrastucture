@@ -64,8 +64,8 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
   network_mode             = "awsvpc"
   memory                   = 1024
   cpu                      = 256
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
-  task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
+  execution_role_arn       = aws_iam_role.ecs_fpr_backend_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_fpr_backend_task_execution_role.arn
 }
 
 resource "aws_ecs_service" "fpr_backend_service" {
