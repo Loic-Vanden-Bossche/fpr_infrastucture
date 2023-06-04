@@ -76,6 +76,12 @@ resource "aws_ecs_task_definition" "fpr_game_task" {
       name : "fpr-game-default-task",
       image : "default-image",
       essential : true,
+      portMappings : [
+        {
+          "containerPort" : 8070,
+          "hostPort" : 8070
+        }
+      ],
       logConfiguration : {
         logDriver : "awslogs",
         options : {
