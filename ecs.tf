@@ -5,11 +5,6 @@ resource "aws_ecs_cluster" "fpr_backend_cluster" {
 resource "aws_ecs_task_definition" "fpr_backend_task" {
   family = "fpr-backend-task"
 
-  lifecycle {
-    create_before_destroy = true
-    ignore_changes        = [container_definitions]
-  }
-
   container_definitions = jsonencode([
     {
       name : "fpr-backend-task",

@@ -59,17 +59,13 @@ jobs:
           USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
           REPOSITORY: ${{ vars.DOCKER_HUB_REPOSITORY }}
         run: |
-          curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/lvandenbossche/fpr-backend/tags/"
           TAG=$(curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/lvandenbossche/fpr-backend/tags/" | jq -r '.results[] | select(.name != "latest") | .name')
+          echo "Using Docker Hub tag: $TAG"
           echo "::set-output name=tag::$TAG"
 
-      - name: Use Docker Hub Tag
-        env:
-          TAG: ${{ steps.latest-tag.outputs.tag }}
-        run: |
-          echo "Using Docker Hub tag: $TAG"
-
       - name: Terraform Plan
+        env:
+          TF_VAR_docker_hub_image_tag: ${{ steps.latest-tag.outputs.tag }}
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
@@ -110,5 +106,7 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
+        env:
+          TF_VAR_docker_hub_image_tag: ${{ steps.latest-tag.outputs.tag }}
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
