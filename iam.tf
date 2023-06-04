@@ -98,10 +98,12 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_role_policy" {
       {
         Effect : "Allow",
         Action : [
+          "iam:PassRole",
           "ecs:ListClusters",
           "ecs:DescribeServices",
           "ecs:DescribeTaskDefinition",
-          "ecs:RegisterTaskDefinition"
+          "ecs:RegisterTaskDefinition",
+          "ecs:RunTask",
         ],
         Resource : "*"
       }
