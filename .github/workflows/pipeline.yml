@@ -54,12 +54,8 @@ jobs:
 
       - name: Get latest Docker Hub tag
         id: latest-tag
-        env:
-          TOKEN: ${{ steps.login.outputs.token }}
-          USERNAME: ${{ vars.DOCKER_HUB_USERNAME }}
-          REPOSITORY: ${{ vars.DOCKER_HUB_REPOSITORY }}
         run: |
-          TAG=$(curl -s -H "Authorization: Bearer $TOKEN" "https://hub.docker.com/v2/repositories/lvandenbossche/fpr-backend/tags/" | jq -r '.results[] | select(.name != "latest") | .name')
+          TAG=$(curl -s -H "Authorization: Bearer ${{ steps.login.outputs.token }}" "https://hub.docker.com/v2/repositories/${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_REPOSITORY }}/tags/" | jq -r '.results[] | select(.name != "latest") | .name')
           echo "Using Docker Hub tag: $TAG"
           echo "::set-output name=tag::$TAG"
 
