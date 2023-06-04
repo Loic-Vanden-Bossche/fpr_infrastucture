@@ -99,7 +99,8 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_role_policy" {
         Effect : "Allow",
         Action : [
           "ecs:ListClusters",
-          "ecs:DescribeServices"
+          "ecs:DescribeServices",
+          "ecs:DescribeTaskDefinition"
         ],
         Resource : "*"
       }
