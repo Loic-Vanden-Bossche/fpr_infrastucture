@@ -58,7 +58,7 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
   ])
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  memory                   = 512
+  memory                   = 1024
   cpu                      = 256
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
   task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
