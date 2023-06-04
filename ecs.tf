@@ -69,14 +69,6 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
   task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
 }
 
-data "external" "dockerhub_latest_tag" {
-  program = ["sh", "-c", "docker pull ${var.docker_hub_repository}:${var.docker_hub_image} >/dev/null && docker image inspect --format '{{ index .RepoDigests 0 }}' ${var.docker_hub_repository}:${var.docker_hub_image} | cut -d@ -f2"]
-}
-
-output "latest_docker_tag" {
-  value = data.external.dockerhub_latest_tag.result
-}
-
 resource "aws_ecs_service" "fpr_backend_service" {
   lifecycle {
     create_before_destroy = true
