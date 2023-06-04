@@ -2,6 +2,17 @@ resource "aws_ecs_cluster" "fpr_backend_cluster" {
   name = "fpr-backend-cluster"
 }
 
+resource "aws_ecs_cluster_capacity_providers" "fpr_backend_capacity_providers" {
+  cluster_name       = aws_ecs_cluster.fpr_backend_cluster.name
+  capacity_providers = [aws_ecs_capacity_provider.ecs_capacity_provider.name]
+
+  default_capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+    weight            = 1
+    base              = 0
+  }
+}
+
 resource "aws_ecs_task_definition" "fpr_backend_task" {
   family = "fpr-backend-task"
 
@@ -41,6 +52,10 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
         {
           name : "spring.datasource.password",
           value : var.rds_pg_password
+        },
+        {
+          name : "spring.profiles.active",
+          value : "prod"
         }
       ],
       logConfiguration : {
@@ -52,29 +67,56 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
           awslogs-stream-prefix : "awslogs-backend"
         }
       },
-      memory : 1024,
-      cpu : 256
+      memoryReservation : 1024,
+      cpuReservation : 256
     }
   ])
-  requires_compatibilities = ["FARGATE"]
+  requires_compatibilities = ["EC2"]
   network_mode             = "awsvpc"
-  memory                   = 1024
-  cpu                      = 256
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
   task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
 }
 
-resource "aws_ecs_service" "fpr_backend_service" {
-  lifecycle {
-    create_before_destroy = true
-    ignore_changes        = [task_definition]
+resource "aws_launch_template" "ecs_launch_template" {
+  name          = "fpr-backend-launch-template"
+  image_id      = "ami-08df359630daf99c7"
+  instance_type = "t2.micro"
+}
+
+resource "aws_autoscaling_group" "ecs_asg" {
+  name = "fpr-backend-asg"
+
+  launch_template {
+    id      = aws_launch_template.ecs_launch_template.id
+    version = "$Latest"
   }
+
+  min_size                  = 1
+  max_size                  = 1
+  desired_capacity          = 1
+  vpc_zone_identifier       = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
+  health_check_type         = "EC2"
+  health_check_grace_period = 300
+}
+
+resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
+  name = "fpr-backend-capacity-provider"
+  auto_scaling_group_provider {
+    auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
+  }
+}
+
+resource "aws_ecs_service" "fpr_backend_service" {
+  #  lifecycle {
+  #    create_before_destroy = true
+  #    ignore_changes        = [task_definition]
+  #  }
 
   name            = "fpr-backend-service"
   cluster         = aws_ecs_cluster.fpr_backend_cluster.id
   task_definition = aws_ecs_task_definition.fpr_backend_task.arn
-  launch_type     = "FARGATE"
-  desired_count   = 1
+
+  desired_count = 1
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
@@ -83,8 +125,7 @@ resource "aws_ecs_service" "fpr_backend_service" {
   }
 
   network_configuration {
-    subnets          = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
-    assign_public_ip = true
-    security_groups  = [aws_security_group.service_security_group.id]
+    subnets         = [aws_default_subnet.default_subnet_a.id, aws_default_subnet.default_subnet_b.id]
+    security_groups = [aws_security_group.service_security_group.id]
   }
 }
