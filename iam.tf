@@ -61,6 +61,26 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_ssm_role_policy" 
   })
 }
 
+resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_ecr_role_policy" {
+  name = "ecs-fpr-backend-task-execution-ecr-role-policy"
+  role = aws_iam_role.ecs_fpr_backend_task_execution_role.id
+
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Effect : "Allow",
+        Action : [
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetAuthorizationToken"
+        ],
+        Resource : "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_logs_role_policy" {
   name = "ecs-fpr-backend-task-execution-logs-role-policy"
   role = aws_iam_role.ecs_fpr_backend_task_execution_role.id
