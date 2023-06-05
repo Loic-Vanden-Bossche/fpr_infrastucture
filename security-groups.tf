@@ -21,14 +21,26 @@ resource "aws_security_group" "load_balancer_security_group" {
   }
 }
 
-resource "aws_security_group" "service_security_group" {
+resource "aws_security_group" "game_security_group" {
+  name        = "game-security-group"
+  description = "Security group for the game container"
+
   ingress {
-    from_port   = 8070
-    to_port     = 8070
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 8070
+    to_port         = 8070
+    protocol        = "tcp"
+    security_groups = [aws_security_group.backend_security_group.id]
   }
 
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "backend_security_group" {
   ingress {
     from_port       = 0
     to_port         = 0
