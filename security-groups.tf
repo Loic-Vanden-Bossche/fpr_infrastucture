@@ -40,11 +40,20 @@ resource "aws_security_group" "game_security_group" {
   }
 
   egress {
-    from_port               = 0
-    to_port                 = 0
-    protocol                = "-1"
-    cidr_blocks             = ["0.0.0.0/0"]
-    destination_prefix_list = "com.amazonaws.${var.region}.ecr.dkr"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    description     = "Allow outbound requests to ECR"
+    security_groups = []
+
+    cidr_blocks = [
+      "52.94.0.0/16",
+      "54.152.0.0/16",
+      "54.144.0.0/16",
+      "54.236.0.0/16",
+      "34.232.0.0/16",
+      "54.208.0.0/16",
+    ]
   }
 }
 
