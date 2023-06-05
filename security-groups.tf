@@ -38,6 +38,14 @@ resource "aws_security_group" "game_security_group" {
     protocol        = "-1"
     security_groups = [aws_security_group.backend_security_group.id]
   }
+
+  egress {
+    from_port               = 0
+    to_port                 = 0
+    protocol                = "-1"
+    cidr_blocks             = ["0.0.0.0/0"]
+    destination_prefix_list = "com.amazonaws.${var.region}.ecr.dkr"
+  }
 }
 
 resource "aws_security_group" "backend_security_group" {
