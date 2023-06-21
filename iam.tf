@@ -117,10 +117,6 @@ resource "aws_iam_user" "ecr_user" {
   name = "ECR-User"
 }
 
-resource "aws_iam_access_key" "ecr_user_key" {
-  user = aws_iam_user.ecr_user.name
-}
-
 resource "aws_iam_user_policy" "ecr_user_policy" {
   name = "ecr-user-policy"
   user = aws_iam_user.ecr_user.name
