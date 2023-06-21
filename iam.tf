@@ -112,3 +112,41 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_role_policy" {
     ]
   })
 }
+
+resource "aws_iam_user" "ecr_user" {
+  name = "ECR-User"
+}
+
+resource "aws_iam_access_key" "ecr_user_key" {
+  user = aws_iam_user.ecr_user.name
+}
+
+resource "aws_iam_user_policy" "ecr_user_policy" {
+  name = "ecr-user-policy"
+  user = aws_iam_user.ecr_user.name
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "ECRAccess",
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetRepositoryPolicy",
+          "ecr:DescribeRepositories",
+          "ecr:ListImages",
+          "ecr:DescribeImages",
+          "ecr:BatchGetImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:PutImage"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+}
