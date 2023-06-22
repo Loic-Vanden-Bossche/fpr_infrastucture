@@ -145,6 +145,7 @@ resource "aws_iam_role_policy" "ecs_fpr_games_builder_task_execution_role_policy
       {
         Effect : "Allow",
         Action : [
+          "iam:PassRole",
           "s3:PutObject",
           "s3:DeleteObject",
           "s3:ListBucket",
