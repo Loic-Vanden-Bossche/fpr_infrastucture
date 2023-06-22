@@ -146,9 +146,7 @@ resource "aws_iam_role_policy" "ecs_fpr_games_builder_task_execution_role_policy
         Effect : "Allow",
         Action : [
           "iam:PassRole",
-          "s3:PutObject",
           "s3:DeleteObject",
-          "s3:ListBucket",
           "s3:GetObject",
         ],
         Resource : "*"
@@ -157,14 +155,19 @@ resource "aws_iam_role_policy" "ecs_fpr_games_builder_task_execution_role_policy
   })
 }
 
+resource "aws_iam_role_policy" "ecr_role_policy" {
+  name = "ecs-fpr-games-builder-task-execution-role-ecr-policy"
+  role = aws_iam_role.ecs_fpr_games_builder_task_execution_role.id
+
+  policy = aws_iam_policy.ecr_push_policy.policy
+}
+
 resource "aws_iam_user" "ecr_user" {
   name = "ECR-User"
 }
 
-resource "aws_iam_user_policy" "ecr_user_policy" {
-  name = "ecr-user-policy"
-  user = aws_iam_user.ecr_user.name
-
+resource "aws_iam_policy" "ecr_push_policy" {
+  name = "ecr-push-policy"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -189,4 +192,11 @@ resource "aws_iam_user_policy" "ecr_user_policy" {
       }
     ]
   })
+}
+
+resource "aws_iam_user_policy" "ecr_role_policy" {
+  name = "ecr-role-policy"
+  user = aws_iam_user.ecr_user.name
+
+  policy = aws_iam_policy.ecr_push_policy.policy
 }
