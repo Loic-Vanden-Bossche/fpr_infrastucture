@@ -137,7 +137,7 @@ resource "aws_iam_role_policy" "ecs_fpr_backend_task_execution_role_policy" {
 
 resource "aws_iam_role_policy" "ecs_fpr_games_builder_task_execution_role_policy" {
   name = "ecs-fpr-games-builder-task-execution-role-policy"
-  role = aws_iam_role.ecs_fpr_backend_task_execution_role.id
+  role = aws_iam_role.ecs_fpr_games_builder_task_execution_role.id
 
   policy = jsonencode({
     Version : "2012-10-17",
