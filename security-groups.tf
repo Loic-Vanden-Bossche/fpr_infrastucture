@@ -40,15 +40,11 @@ resource "aws_security_group" "game_security_group" {
   }
 
   egress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    description     = "Allow outbound requests to ECR"
-    security_groups = []
-
-    cidr_blocks = [
-      "35.180.0.0/16",
-    ]
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    description = "Allow outbound requests to ECR"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
