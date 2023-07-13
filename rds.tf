@@ -10,4 +10,6 @@ resource "aws_db_instance" "fpr_backend_db" {
   parameter_group_name = "default.postgres14"
   skip_final_snapshot  = true
   publicly_accessible  = true
+
+  vpc_security_group_ids = [aws_security_group.database_security_group.id]
 }

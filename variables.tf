@@ -13,7 +13,7 @@ variable "secret_access_key" {
 variable "domain_name" {
   description = "Domain name to use for the application"
   type        = string
-  default     = "flash-player-revival.fr"
+  default     = "flash-player-revival.net"
 }
 
 variable "region" {

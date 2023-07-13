@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "terraform-remote-state-fpr"
+    bucket = "terraform-remote-state-fpr-backend"
     key    = "terraform.tfstate"
     region = "eu-west-3"
   }

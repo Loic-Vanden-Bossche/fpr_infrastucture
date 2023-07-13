@@ -1,6 +1,6 @@
 # Backend
 resource "aws_acm_certificate" "public-api-cert" {
-  domain_name       = "api.flash-player-revival.fr"
+  domain_name       = "api.flash-player-revival.net"
   validation_method = "DNS"
 }
 
@@ -12,7 +12,7 @@ resource "aws_acm_certificate_validation" "api" {
 # Fronted
 resource "aws_acm_certificate" "public-cert-fronted" {
   provider          = aws.virginia
-  domain_name       = "flash-player-revival.fr"
+  domain_name       = "flash-player-revival.net"
   validation_method = "DNS"
 }
 
