@@ -1,6 +1,6 @@
 # Backend
 resource "aws_acm_certificate" "public-api-cert" {
-  domain_name       = "api.flash-player-revival.net"
+  domain_name       = "${var.api_subdomain_name}.${var.domain_name}"
   validation_method = "DNS"
 }
 
@@ -9,10 +9,10 @@ resource "aws_acm_certificate_validation" "api" {
   validation_record_fqdns = [for record in aws_route53_record.api_validation : record.fqdn]
 }
 
-# Fronted
+# Frontend
 resource "aws_acm_certificate" "public-cert-frontend" {
   provider          = aws.virginia
-  domain_name       = "flash-player-revival.net"
+  domain_name       = var.domain_name
   validation_method = "DNS"
 }
 
@@ -25,7 +25,7 @@ resource "aws_acm_certificate_validation" "frontend" {
 # Medias
 resource "aws_acm_certificate" "public-cert-medias" {
   provider          = aws.virginia
-  domain_name       = "medias.flash-player-revival.net"
+  domain_name       = "${var.medias_subdomain_name}.${var.domain_name}"
   validation_method = "DNS"
 }
 

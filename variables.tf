@@ -22,6 +22,12 @@ variable "medias_subdomain_name" {
   default     = "medias"
 }
 
+variable "api_subdomain_name" {
+  description = "Subdomain name to use for the api"
+  type        = string
+  default     = "api"
+}
+
 variable "region" {
   description = "Region to use for AWS resources"
   type        = string
