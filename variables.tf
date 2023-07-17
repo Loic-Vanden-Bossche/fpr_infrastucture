@@ -16,6 +16,12 @@ variable "domain_name" {
   default     = "flash-player-revival.net"
 }
 
+variable "medias_subdomain_name" {
+  description = "Subdomain name to use for the medias"
+  type        = string
+  default     = "medias"
+}
+
 variable "region" {
   description = "Region to use for AWS resources"
   type        = string
