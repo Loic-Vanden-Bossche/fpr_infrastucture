@@ -17,7 +17,6 @@ resource "aws_cloudfront_distribution" "cf_dist_medias" {
 
   custom_error_response {
     error_code            = 403
-    response_code         = 200
     error_caching_min_ttl = 10
   }
 
