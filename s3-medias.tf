@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "bucket_policy_document" {
+data "aws_iam_policy_document" "bucket_policy_document_medias" {
   statement {
     actions = ["s3:GetObject"]
     resources = [
@@ -39,5 +39,5 @@ resource "aws_s3_bucket_public_access_block" "public_block_medias" {
 
 resource "aws_s3_bucket_policy" "bucket_medias_policy" {
   bucket = aws_s3_bucket.bucket_medias.id
-  policy = data.aws_iam_policy_document.bucket_policy_document.json
+  policy = data.aws_iam_policy_document.bucket_policy_document_medias.json
 }

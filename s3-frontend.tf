@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "bucket_frontend_policy_document" {
+data "aws_iam_policy_document" "bucket_policy_document_frontend" {
   statement {
     actions = ["s3:GetObject"]
     resources = [
@@ -58,5 +58,5 @@ resource "aws_s3_bucket_website_configuration" "website" {
 
 resource "aws_s3_bucket_policy" "bucket_frontend_policy" {
   bucket = aws_s3_bucket.bucket_frontend.id
-  policy = data.aws_iam_policy_document.bucket_policy_document.json
+  policy = data.aws_iam_policy_document.bucket_policy_document_frontend.json
 }
