@@ -200,3 +200,9 @@ resource "aws_iam_user_policy" "ecr_role_policy" {
 
   policy = aws_iam_policy.ecr_push_policy.policy
 }
+
+data "aws_caller_identity" "current" {}
+
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
