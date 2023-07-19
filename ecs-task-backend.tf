@@ -43,6 +43,14 @@ resource "aws_ecs_task_definition" "fpr_backend_task" {
           value : local.account_id
         },
         {
+          name : "games-bucket.name",
+          value : aws_s3_bucket.game_uploads_bucket.id
+        },
+        {
+          name : "medias-bucket.name",
+          value : aws_s3_bucket.bucket_medias.id
+        },
+        {
           name : "spring.profiles.active",
           value : "prod"
         }
