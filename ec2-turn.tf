@@ -11,4 +11,43 @@ resource "aws_instance" "turn-server" {
     Name  = "fpr-turn-server"
     Owner = "Terraform"
   }
+
+  vpc_security_group_ids = [aws_security_group.turn-server_sg.id]
+}
+
+resource "aws_security_group" "turn-server_sg" {
+  name        = "fpr-turn-server-sg"
+  description = "Security group for the turn server"
+
+  ingress {
+    description = "UDP port range 1"
+    from_port   = 32355
+    to_port     = 65535
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "UDP port range 2"
+    from_port   = 3478
+    to_port     = 3479
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "UDP port range 1"
+    from_port   = 32355
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "UDP port range 2"
+    from_port   = 3478
+    to_port     = 3479
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
