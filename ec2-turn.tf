@@ -20,35 +20,39 @@ resource "aws_security_group" "turn-server_sg" {
   description = "Security group for the turn server"
 
   ingress {
-    description = "UDP port range 1"
-    from_port   = 32355
-    to_port     = 65535
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description      = "UDP port 1"
+    from_port        = 3478
+    to_port          = 3478
+    protocol         = "udp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   ingress {
-    description = "UDP port range 2"
-    from_port   = 3478
-    to_port     = 3479
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description      = "UDP port 2"
+    from_port        = 5349
+    to_port          = 5349
+    protocol         = "udp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   ingress {
-    description = "UDP port range 1"
-    from_port   = 32355
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description      = "TCP port 1"
+    from_port        = 3478
+    to_port          = 3478
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   ingress {
-    description = "UDP port range 2"
-    from_port   = 3478
-    to_port     = 3479
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description      = "TCP port 2"
+    from_port        = 5349
+    to_port          = 5349
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   ingress {
@@ -60,7 +64,7 @@ resource "aws_security_group" "turn-server_sg" {
   }
 
   ingress {
-    description = "SSL Port"
+    description = "HTTPS Port"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"

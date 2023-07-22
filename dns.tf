@@ -96,3 +96,12 @@ resource "aws_route53_record" "medias" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_record" "turn_server_record" {
+  name    = "turn.${var.domain_name}"
+  type    = "A"
+  zone_id = data.aws_route53_zone.public.zone_id
+
+  ttl     = 300
+  records = [aws_instance.turn-server.public_ip]
+}
